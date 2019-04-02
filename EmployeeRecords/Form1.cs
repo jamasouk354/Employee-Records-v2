@@ -20,7 +20,10 @@ namespace EmployeeRecords
         }
 
         private void addButton_Click(object sender, EventArgs e)
-        { 
+        {
+            Employee ep = new Employee(idInput.Text, fnInput.Text, lnInput.Text, dateInput.Text, salaryInput.Text);
+            employeeDB.Add(ep);
+            outputLabel.Text = "New Employee added";
             ClearLabels();
         }
 
@@ -31,7 +34,11 @@ namespace EmployeeRecords
 
         private void listButton_Click(object sender, EventArgs e)
         {
-
+            outputLabel.Text = null;
+            foreach (Employee ep in  employeeDB)
+            {
+                outputLabel.Text += ep.id + "\n" + ep.firstName + "  " + ep.lastName + "  " + ep.date + "  " + ep.salary + "\n\n";
+            }
         }
 
         private void ClearLabels()
@@ -55,7 +62,17 @@ namespace EmployeeRecords
 
         public void saveDB()
         {
+            XmlWriter write = XmlWriter.Create("Resources/EmployeeData.xml", null);
+            write.WriteStartElement("Employee");
 
+            foreach (Employee ep in employeeDB)
+            {
+                write.WriteElementString("id", ep.id);
+                write.WriteElementString("firstName", ep.firstName);
+                write.WriteElementString("lastName", ep.lastName);
+                write.WriteElementString("date", ep.date);
+                write.WriteElementString("salary", ep.salary);
+            }
         }
     }
 }
